@@ -34,7 +34,7 @@ namespace AvaTrade.Go.BFF.Features
                 .OrderByDescending(x => x.Date)
                 .WhereWhen(x => x.DaysFromToday() <= request.FromDaysBack, request.FromDaysBack > 0)
                 .WhereWhen(x => x.Instrument == request.Instrument, request.Instrument is not null)
-                .WhereWhen(x => this.filterer.ContainsText(x.Text, request.SearchText), !string.IsNullOrEmpty(request.SearchText))
+                .WhereWhen(x => this.filterer.ContainsText(x.Text, request.SearchText), this.SearchTextValid(request.SearchText))
                 .TakeWhen(request.MaxCount, request.MaxCount > 0)
                 .ToArray();
 
@@ -42,6 +42,11 @@ namespace AvaTrade.Go.BFF.Features
             {
                 News = filteredNews
             };
+        }
+
+        private bool SearchTextValid(string searchText)
+        {
+            return !string.IsNullOrEmpty(searchText) && searchText.Length > 2;
         }
     }
 

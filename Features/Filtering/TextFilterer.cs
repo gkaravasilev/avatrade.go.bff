@@ -27,17 +27,16 @@ namespace AvaTrade.Go.BFF.Features.Filtering
                 if (node.Children.TryGetValue(letter, out var currNode) && currNode.Match(letter))
                 {
                     node = currNode;
+
+                    if (currNode.Children.Count == 0)
+                    {
+                        return true;
+                    }
+
                     continue;
                 }
 
-                if (node.Children.Count == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    node = this.triesStructure.Head;
-                }
+                node = this.triesStructure.Head;
             }
 
             return false;
